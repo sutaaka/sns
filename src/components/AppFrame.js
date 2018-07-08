@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import AppDrawer from './AppDrawer'
 
-export default class AppFrame extends Component {
+class AppFrame extends Component {
   render() {
     return (
-      <div>AppFrame</div>
+      <AppDrawer />
     );
   }
 }
+
+export default AppFrame

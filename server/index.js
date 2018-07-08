@@ -66,14 +66,19 @@ router
   //
   //   return next()
   // })
-  .post('/channels', (ctx, next) => {
+  .post('/channels', async (ctx, next) => {
     const { name } = ctx.request.body
     console.log(name)
-    Channels.create({
+
+    const rusult = await Channels.create({
       name: name,
     })
 
+    ctx.body = rusult.dataValues
     ctx.status = 201
+    // ctx.body = (await Channels.findAll()).map(result => {
+    //   return { id: result.id, name: result.name }
+    // })
 
     return next()
   })
