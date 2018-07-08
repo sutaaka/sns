@@ -47,8 +47,13 @@ router
 
     return next()
   })
-  .get('/messages',async(ctx,next) => {
-    const results = await Messages.findAll()
+  .get('/messages', async (ctx, next) => {
+    const channelId = parseInt(ctx.request.query.channelId)
+
+    const results = await Messages.findAll({
+      where: { channelId }
+    })
+
     const data = results.map(result => {
       return {id: result.id, channelId: result.channelId, text: result.text}
     })

@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
 import AppDrawer from './AppDrawer'
+import AppContent from './AppContent'
 
 class AppFrame extends Component {
   render() {
     return (
-      <AppDrawer />
+      <div>
+        <AppDrawer />
+        <AppContent />
+      </div>
     );
   }
 }
