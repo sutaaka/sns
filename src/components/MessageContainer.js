@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import axios from 'axios'
 
 import TextField from '@material-ui/core/TextField';
@@ -12,15 +13,25 @@ class MessagesContainer extends Component {
     };
   }
 
-  componentDidMount(){
-    axios.get('http://localhost:3001/messages')
+  fetchMessages()  {
+    axios.get(`http://localhost:3001/messages?channelId=${this.props.currentChannelId}`)
       .then((response) => {
         this.setState({ messages : response.data })
-        console.log(this.setState.messages)
       })
       .catch((error) => {
         console.log(error);
       })
+  }
+
+  componentDidMount(){
+    this.fetchMessages()
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.currentChannelId !== prevProps.currentChannelId) {
+      this.fetchMessages()
+      console.log('チャンネルID変わった…')
+    }
   }
 
   onCreateMessageButtonClicked() {
@@ -86,23 +97,12 @@ class MessagesContainer extends Component {
       </div>
     );
   }
-    // return (
-    //   <div id="messages">
-    //  
-    // <Messages data={this.state.messages} />)
-  
 }
 
-// function Messages(props){
-//   const listElements = props.data.map((message,index) =>{ 
-//     return <li 
-//     key={index}
-//     style={{
-//       fontSize: 20,
-//       color:'red',
-//     }}
-//     >{message.text}</li>
-//   });
+function mapStateToProps(state) {
+  return {
+    currentChannelId: state.channels.currentChannelId
+  }
+}
 
-
-export default MessagesContainer;
+export default connect(mapStateToProps)(MessagesContainer);

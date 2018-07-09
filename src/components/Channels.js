@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import axios from 'axios'
 
 import TextField from '@material-ui/core/TextField';
@@ -7,8 +9,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-        // <input id="channel-title" />
-        // <Button id="createChannel" onClick={this.onCreateChannelButtonClicked.bind(this)}>チャンネル作成</Button>
+import { changeChannel } from '../actions/channels'
 
 class Channels extends Component {
   constructor(props) {
@@ -42,11 +43,21 @@ class Channels extends Component {
       })
   }
 
+  onChangeChannel(channelId, e) {
+    // console.log(channelId)
+    this.props.changeChannel(channelId)
+  }
+
   render() {
     const listElements = this.state.channels.map((channel, index) => {
+
       return (
-        <ListItem key={index} button>
-          <ListItemText primary={channel.name} />
+        <ListItem
+          key={index}
+          button
+          onClick={this.onChangeChannel.bind(this, channel.id)}
+        >
+          <ListItemText primary={`${channel.name} ${this.props.currentChannelId === channel.id ? '(selected)' : ''}`} />
         </ListItem>
       )
     })
@@ -69,4 +80,15 @@ class Channels extends Component {
   }
 }
 
-export default Channels;
+
+
+export default connect(
+  (state) => {
+    return {
+      currentChannelId: state.channels.currentChannelId
+    }
+  },
+  (dispatch) => {
+    return bindActionCreators({ changeChannel }, dispatch)
+  }
+)(Channels);
