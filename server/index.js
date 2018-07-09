@@ -87,14 +87,18 @@ router
 
     return next()
   })
-  .post('/messages', (ctx, next) => {
+  .post('/messages', async (ctx, next) => {
     const { channelId, text } = ctx.request.body
     console.log(channelId, text)
 
-    Messages.create({
+    const result = await Messages.create({
       channelId: channelId,
       text: text
     })
+
+    ctx.body =  { id: result.id, text, channelId }
+
+    ctx.status = 201
   })
 
 app

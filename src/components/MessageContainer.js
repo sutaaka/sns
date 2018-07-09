@@ -30,22 +30,19 @@ class MessagesContainer extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.currentChannelId !== prevProps.currentChannelId) {
       this.fetchMessages()
-      console.log('チャンネルID変わった…')
     }
   }
 
   onCreateMessageButtonClicked() {
-      const text = document.getElementById('text').value
+    const text = document.getElementById('text').value
 
-      axios
+    axios
       .post('http://localhost:3001/messages',{
+        channelId: this.props.currentChannelId,
         text: text
       })
-      .then(() => {
-        return axios.get('http://localhost:3001/messages')
-      })
-      .then((response) =>{
-        this.setState({ messages: response.data })
+      .then((response) => {
+        this.setState({ messages: [...this.state.messages, response.data] })
       })
       .catch((error) =>{
         console.log(error);
